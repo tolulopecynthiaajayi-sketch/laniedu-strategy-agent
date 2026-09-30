@@ -66,7 +66,7 @@ Return only raw JSON matching this schema:
       }
     });
 
-    const generatedBrief = JSON.parse(response.text());
+    const generatedBrief = JSON.parse(response.text);
     generatedBrief.intakeData = intakeData;
     generatedBrief.generatedAt = new Date().toISOString();
 
