@@ -127,7 +127,7 @@ export function App() {
         <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
           {activeTab === 'brief' && (
             activeBrief ? (
-              <StrategyBriefView brief={activeBrief} />
+              <StrategyBriefView brief={activeBrief} onUpdateBrief={setActiveBrief} />
             ) : (
               <div className="text-center py-12 space-y-4">
                 <p className="text-sm text-slate-400">No active Strategy Brief loaded yet.</p>

@@ -22,12 +22,38 @@ import { generatePdfDocument } from '../utils/exportPdf';
 
 interface StrategyBriefViewProps {
   brief: ClientStrategyBrief;
+  onUpdateBrief?: (newBrief: ClientStrategyBrief) => void;
 }
 
-export const StrategyBriefView: React.FC<StrategyBriefViewProps> = ({ brief }) => {
+export const StrategyBriefView: React.FC<StrategyBriefViewProps> = ({ brief, onUpdateBrief }) => {
   const [copiedScript, setCopiedScript] = useState(false);
   const [copiedMd, setCopiedMd] = useState(false);
   const [isExportingPdf, setIsExportingPdf] = useState(false);
+  const [aiPrompt, setAiPrompt] = useState("");
+  const [isGenerating, setIsGenerating] = useState(false);
+
+  const handleAiRegenerate = async () => {
+    if (!aiPrompt.trim() || !onUpdateBrief) return;
+    setIsGenerating(true);
+    try {
+      const res = await fetch("/api/copilot", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ intakeData: brief.intakeData, prompt: aiPrompt, currentBrief: brief })
+      });
+      const data = await res.json();
+      if (data.success && data.brief) {
+        onUpdateBrief(data.brief);
+        setAiPrompt("");
+      } else {
+        alert("AI Error: " + data.error);
+      }
+    } catch(err) {
+      console.error(err);
+    } finally {
+      setIsGenerating(false);
+    }
+  };
 
   const { intakeData, viability } = brief;
 
@@ -383,6 +409,33 @@ export const StrategyBriefView: React.FC<StrategyBriefViewProps> = ({ brief }) =
             <p className="text-xs italic text-slate-300 bg-slate-950 p-3 rounded-xl border border-slate-800/80 leading-relaxed font-sans">
               "{brief.advisorClientScript}"
             </p>
+          </div>
+        </div>
+
+        {/* Section 7: AI Strategy Co-Pilot */}
+        <div className="glass-panel p-5 rounded-2xl space-y-4 border border-emerald-500/30 no-print">
+          <h3 className="text-xs font-bold text-emerald-300 tracking-wider uppercase flex items-center gap-1.5">
+            <Sparkles className="h-4 w-4" />
+            7. AI Strategy Co-Pilot
+          </h3>
+          <p className="text-xs text-slate-300">
+            Tell the AI how to adjust this strategy (e.g., "Find more schools in Brazil", "Remove Malaysia", "Increase budget to €6000").
+          </p>
+          <div className="flex gap-2">
+            <input 
+              type="text"
+              value={aiPrompt}
+              onChange={(e) => setAiPrompt(e.target.value)}
+              placeholder="E.g. Focus exclusively on South America..."
+              className="flex-1 rounded-xl glass-input p-3 text-xs font-mono"
+            />
+            <button 
+              onClick={handleAiRegenerate}
+              disabled={isGenerating || !aiPrompt.trim()}
+              className="rounded-xl bg-emerald-600 px-4 py-2.5 text-xs font-bold text-white hover:bg-emerald-500 disabled:opacity-50 transition-all flex items-center gap-2"
+            >
+              {isGenerating ? 'Regenerating...' : 'Regenerate Strategy'}
+            </button>
           </div>
         </div>
 
