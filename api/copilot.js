@@ -27,6 +27,7 @@ Name: ${intakeData.applicantName}
 Budget: €${intakeData.tuitionBudgetAmount}/year
 Degree Sought: ${intakeData.degreeLevelSought}
 Previous Background: ${intakeData.previousBackground || "Not Specified"}
+Professional Background: ${intakeData.professionalBackground || "Not Specified"}
 Target Programme: ${intakeData.targetProgramme}
 Qualification: ${intakeData.highestQualification}
 

@@ -41,6 +41,7 @@ export interface ClientIntakeData {
   highestQualification: Qualification;
   targetProgramme: string; // Field of Study
   previousBackground?: string; // Previous course of study
+  professionalBackground?: string; // Professional background
   workExperienceYears?: string;
   degreeLevelSought: 'master' | 'pgd' | 'bachelor';
   tuitionBudgetAmount: number;
