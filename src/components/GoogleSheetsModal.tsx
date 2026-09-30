@@ -63,7 +63,7 @@ function onFormSubmit(e) {
     }
   };
 
-  // Replace with your live Vercel endpoint
+  // Live Vercel Webhook Endpoint
   var webhookUrl = "https://laniedu-strategy-agent.vercel.app/api/intake";
   
   var options = {
@@ -171,7 +171,7 @@ function parseDestinations(val) {
           </p>
         </div>
         <span className="rounded-full bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-400 border border-emerald-500/20 flex items-center gap-1">
-          <CheckCircle2 className="h-3.5 w-3.5" /> Exact Form Schema
+          <CheckCircle2 className="h-3.5 w-3.5" /> Live Vercel Connected
         </span>
       </div>
 
@@ -207,7 +207,7 @@ function parseDestinations(val) {
           </div>
 
           <div className="rounded-xl bg-slate-900/90 p-3 border border-slate-800 text-[11px] text-slate-400">
-            <strong>Vercel Endpoint:</strong> Update <code className="text-emerald-400">webhookUrl</code> with your live Vercel app URL once deployed.
+            <strong>Live Vercel Webhook:</strong> Pre-configured with <code className="text-emerald-400">https://laniedu-strategy-agent.vercel.app/api/intake</code>.
           </div>
         </div>
 
@@ -249,26 +249,15 @@ function parseDestinations(val) {
         </div>
       </div>
 
-      {/* Deployment Guide */}
-      <div className="glass-panel p-5 rounded-2xl space-y-3 border-slate-800">
+      {/* Deployment Status */}
+      <div className="glass-panel p-5 rounded-2xl space-y-3 border-emerald-500/30">
         <h3 className="text-sm font-bold text-white flex items-center gap-2">
-          <Server className="h-4 w-4 text-sky-400" />
-          Deploying to Vercel
+          <Server className="h-4 w-4 text-emerald-400" />
+          Vercel Live Production App
         </h3>
-        <ol className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs text-slate-300">
-          <li className="bg-slate-900/80 p-3 rounded-xl border border-slate-800 space-y-1">
-            <div className="font-bold text-indigo-400">1. Commit to GitHub</div>
-            <p className="text-slate-400">Push project folder to your GitHub account.</p>
-          </li>
-          <li className="bg-slate-900/80 p-3 rounded-xl border border-slate-800 space-y-1">
-            <div className="font-bold text-purple-400">2. Import in Vercel</div>
-            <p className="text-slate-400">Click "Add New Project" on Vercel.com.</p>
-          </li>
-          <li className="bg-slate-900/80 p-3 rounded-xl border border-slate-800 space-y-1">
-            <div className="font-bold text-emerald-400">3. Live Auto-URL</div>
-            <p className="text-slate-400">Get your free secure HTTPS URL instantly!</p>
-          </li>
-        </ol>
+        <p className="text-xs text-slate-300">
+          Your portal is live in production at <a href="https://laniedu-strategy-agent.vercel.app/" target="_blank" rel="noreferrer" className="text-indigo-400 font-mono underline">https://laniedu-strategy-agent.vercel.app/</a>. Any changes pushed to your GitHub main branch will automatically deploy within ~30 seconds!
+        </p>
       </div>
     </div>
   );
