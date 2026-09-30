@@ -26,6 +26,7 @@ Profile:
 Name: ${intakeData.applicantName}
 Budget: €${intakeData.tuitionBudgetAmount}/year
 Degree Sought: ${intakeData.degreeLevelSought}
+Previous Background: ${intakeData.previousBackground || "Not Specified"}
 Target Programme: ${intakeData.targetProgramme}
 Qualification: ${intakeData.highestQualification}
 
@@ -34,6 +35,7 @@ ${prompt ? `THE ADVISOR HAS PROVIDED THIS FEEDBACK/REQUEST: "${prompt}"\nYou MUS
 Generate 2 reach schools, 3 target schools, 1 safety school, and 3 contingency backup schools. Use real universities from anywhere in the world that fit the profile (especially honoring the advisor's request if provided). 
 CRITICAL INSTRUCTION: You MUST ensure that the universities you select offer the exact degree level sought (${intakeData.degreeLevelSought} degree) in the applicant's Target Programme (${intakeData.targetProgramme}). Do NOT recommend a Master's degree if the applicant is seeking a Bachelor's degree, and vice versa. The programmeName must reflect the correct degree type (e.g., "BSc Economics" or "MSc Economics"). 
 CRITICAL INSTRUCTION 2: You MUST ensure that the recommended schools have start dates and application deadlines that align with the applicant's Intake Timeline (${intakeData.intakeTimeline || "Upcoming intake"}).
+CRITICAL INSTRUCTION 3: You MUST compare the applicant's "Previous Background" to their "Target Programme". If they are completely different (e.g., moving from Education to Cyber Security), you MUST only recommend schools/countries that are flexible and allow career transitions. Do not recommend strict schools that require identical undergraduate backgrounds.
 Provide realistic tuition fees in EUR.
 
 Return only raw JSON matching this schema:

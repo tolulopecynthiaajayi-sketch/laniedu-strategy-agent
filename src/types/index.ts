@@ -40,6 +40,7 @@ export interface ClientIntakeData {
   assistanceType: 'full_advisory' | 'diy_route';
   highestQualification: Qualification;
   targetProgramme: string; // Field of Study
+  previousBackground?: string; // Previous course of study
   workExperienceYears?: string;
   degreeLevelSought: 'master' | 'pgd' | 'bachelor';
   tuitionBudgetAmount: number;
