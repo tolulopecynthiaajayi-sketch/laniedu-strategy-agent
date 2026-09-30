@@ -1,4 +1,4 @@
-module.exports = (req, res) => {
+export default function handler(req, res) {
   try {
     // CORS Headers
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -21,7 +21,11 @@ module.exports = (req, res) => {
     if (req.method === 'POST') {
       let body = req.body;
       if (typeof body === 'string') {
-        try { body = JSON.parse(body); } catch (e) { body = {}; }
+        try {
+          body = JSON.parse(body);
+        } catch (e) {
+          body = {};
+        }
       }
       const data = body || {};
 
@@ -31,7 +35,7 @@ module.exports = (req, res) => {
       const qualification = data.highestQualification || 'bachelor_21';
       const destinations = Array.isArray(data.preferredDestinations) ? data.preferredDestinations : ['France', 'Poland'];
 
-      const responsePayload = {
+      return res.status(200).json({
         success: true,
         message: `Client Strategy Brief compiled for ${applicantName}`,
         receivedIntake: {
@@ -52,13 +56,11 @@ module.exports = (req, res) => {
           { schoolName: 'Asia Pacific University (APU)', country: 'Malaysia', tier: 'Safety', tuition: 'RM 28,500 (~€3,800/yr)', url: 'https://www.apu.edu.my' }
         ],
         generatedAt: new Date().toISOString()
-      };
-
-      return res.status(200).json(responsePayload);
+      });
     }
 
     return res.status(405).json({ error: 'Method Not Allowed' });
   } catch (err) {
-    return res.status(500).json({ success: false, error: err ? err.toString() : 'Unknown Error' });
+    return res.status(500).json({ success: false, error: String(err) });
   }
-};
+}
