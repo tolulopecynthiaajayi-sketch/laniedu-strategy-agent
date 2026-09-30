@@ -12,7 +12,7 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method Not Allowed' });
 
   try {
-    const { intakeData, prompt, currentBrief } = req.body;
+    const { intakeData, prompt, currentBrief, cvData, cvMimeType } = req.body;
     
     if (!intakeData) {
       return res.status(400).json({ error: 'Missing intake data' });
@@ -63,9 +63,23 @@ Return only raw JSON matching this schema:
   "advisorClientScript": "..."
 }`;
 
+    let generateContents = systemPrompt;
+    if (cvData && cvMimeType) {
+      generateContents = [
+        { text: systemPrompt },
+        {
+          inlineData: {
+            data: cvData,
+            mimeType: cvMimeType
+          }
+        },
+        { text: "\nCRITICAL INSTRUCTION 4: An attached CV is provided above. You MUST analyze this CV thoroughly. Extract the applicant's true professional experience, skills, and exact educational history to execute a perfectly tailored strategy brief." }
+      ];
+    }
+
     const response = await ai.models.generateContent({
       model: 'gemini-3.8-flash',
-      contents: systemPrompt,
+      contents: generateContents,
       config: {
         responseMimeType: "application/json",
       }

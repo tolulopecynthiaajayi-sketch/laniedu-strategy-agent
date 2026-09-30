@@ -15,7 +15,9 @@ import {
   Sparkles,
   MessageSquare,
   Package,
-  Clock
+  Clock,
+  Paperclip,
+  X
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { generatePdfDocument } from '../utils/exportPdf';
@@ -31,15 +33,48 @@ export const StrategyBriefView: React.FC<StrategyBriefViewProps> = ({ brief, onU
   const [isExportingPdf, setIsExportingPdf] = useState(false);
   const [aiPrompt, setAiPrompt] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
+  const [cvData, setCvData] = useState<string | null>(null);
+  const [cvMimeType, setCvMimeType] = useState<string | null>(null);
+  const [cvFileName, setCvFileName] = useState<string | null>(null);
+
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.type !== "application/pdf") {
+      alert("Please upload a PDF file.");
+      return;
+    }
+    setCvFileName(file.name);
+    setCvMimeType(file.type);
+    
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const base64String = (event.target?.result as string).split(',')[1];
+      setCvData(base64String);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleClearCv = () => {
+    setCvData(null);
+    setCvMimeType(null);
+    setCvFileName(null);
+  };
 
   const handleAiRegenerate = async () => {
-    if (!aiPrompt.trim() || !onUpdateBrief) return;
+    if ((!aiPrompt.trim() && !cvData) || !onUpdateBrief) return;
     setIsGenerating(true);
     try {
       const res = await fetch("https://laniedu-strategy-agent.vercel.app/api/copilot", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ intakeData: brief.intakeData, prompt: aiPrompt, currentBrief: brief })
+        body: JSON.stringify({ 
+          intakeData: brief.intakeData, 
+          prompt: aiPrompt, 
+          currentBrief: brief,
+          cvData: cvData,
+          cvMimeType: cvMimeType
+        })
       });
       const data = await res.json();
       if (data.success && data.brief) {
@@ -421,21 +456,39 @@ export const StrategyBriefView: React.FC<StrategyBriefViewProps> = ({ brief, onU
           <p className="text-xs text-slate-300">
             Tell the AI how to adjust this strategy (e.g., "Find more schools in Brazil", "Remove Malaysia", "Increase budget to €6000").
           </p>
-          <div className="flex gap-2">
-            <input 
-              type="text"
-              value={aiPrompt}
-              onChange={(e) => setAiPrompt(e.target.value)}
-              placeholder="E.g. Focus exclusively on South America..."
-              className="flex-1 rounded-xl glass-input p-3 text-xs font-mono"
-            />
-            <button 
-              onClick={handleAiRegenerate}
-              disabled={isGenerating || !aiPrompt.trim()}
-              className="rounded-xl bg-emerald-600 px-4 py-2.5 text-xs font-bold text-white hover:bg-emerald-500 disabled:opacity-50 transition-all flex items-center gap-2"
-            >
-              {isGenerating ? 'Regenerating...' : 'Regenerate Strategy'}
-            </button>
+          <div className="flex flex-col gap-3">
+            {cvFileName && (
+              <div className="flex items-center gap-2 bg-emerald-950/30 text-emerald-300 text-xs py-1.5 px-3 rounded-lg border border-emerald-500/30 w-max">
+                <Paperclip className="h-3.5 w-3.5" />
+                Attached: {cvFileName}
+                <button onClick={handleClearCv} className="ml-2 text-emerald-500 hover:text-emerald-300">
+                  <X className="h-3.5 w-3.5" />
+                </button>
+              </div>
+            )}
+            <div className="flex gap-2">
+              <input 
+                type="text"
+                value={aiPrompt}
+                onChange={(e) => setAiPrompt(e.target.value)}
+                placeholder="E.g. Focus exclusively on South America..."
+                className="flex-1 rounded-xl glass-input p-3 text-xs font-mono"
+              />
+              
+              <label className="cursor-pointer rounded-xl bg-slate-800 px-4 py-2.5 text-xs font-bold text-slate-300 hover:bg-slate-700 hover:text-white transition-all flex items-center gap-2 border border-slate-700">
+                <Paperclip className="h-4 w-4" />
+                <span>Attach CV (PDF)</span>
+                <input type="file" accept="application/pdf" className="hidden" onChange={handleFileUpload} />
+              </label>
+
+              <button 
+                onClick={handleAiRegenerate}
+                disabled={isGenerating || (!aiPrompt.trim() && !cvData)}
+                className="rounded-xl bg-emerald-600 px-4 py-2.5 text-xs font-bold text-white hover:bg-emerald-500 disabled:opacity-50 transition-all flex items-center gap-2"
+              >
+                {isGenerating ? 'Regenerating...' : 'Regenerate Strategy'}
+              </button>
+            </div>
           </div>
         </div>
 
