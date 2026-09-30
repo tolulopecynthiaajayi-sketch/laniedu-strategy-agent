@@ -1,21 +1,6 @@
 {
-  "functions": {
-    "api/intake.ts": {
-      "memory": 1024,
-      "maxDuration": 15
-    }
-  },
-  "routes": [
-    {
-      "src": "/api/intake",
-      "dest": "api/intake.ts"
-    },
-    {
-      "handle": "filesystem"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/index.html"
-    }
+  "rewrites": [
+    { "source": "/api/(.*)", "destination": "/api/$1" },
+    { "source": "/((?!api/).*)", "destination": "/index.html" }
   ]
 }

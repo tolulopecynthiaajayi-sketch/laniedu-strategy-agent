@@ -1,6 +1,4 @@
-import type { VercelRequest, VercelResponse } from '@vercel/node';
-
-export default function handler(req: VercelRequest, res: VercelResponse) {
+module.exports = (req, res) => {
   // CORS Headers
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
@@ -13,7 +11,7 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method === 'GET') {
     return res.status(200).json({
       status: 'active',
-      service: 'LaniEdu Strategy Agent Webhook API',
+      service: 'LaniEdu Educational Strategy Agent Webhook API',
       version: '2.4',
       endpoint: 'https://laniedu-strategy-agent.vercel.app/api/intake'
     });
@@ -29,7 +27,6 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
       const qualification = data.highestQualification || 'bachelor_21';
       const destinations = Array.isArray(data.preferredDestinations) ? data.preferredDestinations : ['France', 'Poland'];
 
-      // Simple, robust serverless strategy compiler
       const responsePayload = {
         success: true,
         message: `Client Strategy Brief compiled for ${applicantName}`,
@@ -54,13 +51,13 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
       };
 
       return res.status(200).json(responsePayload);
-    } catch (error: any) {
+    } catch (error) {
       return res.status(500).json({
         success: false,
-        error: error?.message || 'Server error compiling brief'
+        error: error && error.message ? error.message : 'Server error compiling brief'
       });
     }
   }
 
   return res.status(405).json({ error: 'Method Not Allowed' });
-}
+};
