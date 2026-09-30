@@ -1,0 +1,21 @@
+{
+  "functions": {
+    "api/intake.ts": {
+      "memory": 1024,
+      "maxDuration": 15
+    }
+  },
+  "routes": [
+    {
+      "src": "/api/intake",
+      "dest": "api/intake.ts"
+    },
+    {
+      "handle": "filesystem"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
+  ]
+}
