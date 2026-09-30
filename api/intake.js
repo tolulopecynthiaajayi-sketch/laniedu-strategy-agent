@@ -1,26 +1,30 @@
 module.exports = (req, res) => {
-  // CORS Headers
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  try {
+    // CORS Headers
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
-  }
+    if (req.method === 'OPTIONS') {
+      return res.status(200).end();
+    }
 
-  if (req.method === 'GET') {
-    return res.status(200).json({
-      status: 'active',
-      service: 'LaniEdu Educational Strategy Agent Webhook API',
-      version: '2.4',
-      endpoint: 'https://laniedu-strategy-agent.vercel.app/api/intake'
-    });
-  }
+    if (req.method === 'GET') {
+      return res.status(200).json({
+        status: 'active',
+        service: 'LaniEdu Strategy Agent Webhook API',
+        version: '2.4',
+        endpoint: 'https://laniedu-strategy-agent.vercel.app/api/intake'
+      });
+    }
 
-  if (req.method === 'POST') {
-    try {
-      const data = req.body || {};
-      
+    if (req.method === 'POST') {
+      let body = req.body;
+      if (typeof body === 'string') {
+        try { body = JSON.parse(body); } catch (e) { body = {}; }
+      }
+      const data = body || {};
+
       const applicantName = data.applicantName || 'Google Form Applicant';
       const budgetAmount = Number(data.tuitionBudgetAmount) || 4000;
       const budgetTierLabel = data.budgetTierLabel || 'Under €4,000 / ~₦6 Million per year';
@@ -51,13 +55,10 @@ module.exports = (req, res) => {
       };
 
       return res.status(200).json(responsePayload);
-    } catch (error) {
-      return res.status(500).json({
-        success: false,
-        error: error && error.message ? error.message : 'Server error compiling brief'
-      });
     }
-  }
 
-  return res.status(405).json({ error: 'Method Not Allowed' });
+    return res.status(405).json({ error: 'Method Not Allowed' });
+  } catch (err) {
+    return res.status(500).json({ success: false, error: err ? err.toString() : 'Unknown Error' });
+  }
 };
