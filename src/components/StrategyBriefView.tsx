@@ -36,7 +36,7 @@ export const StrategyBriefView: React.FC<StrategyBriefViewProps> = ({ brief, onU
     if (!aiPrompt.trim() || !onUpdateBrief) return;
     setIsGenerating(true);
     try {
-      const res = await fetch("/api/copilot", {
+      const res = await fetch("https://laniedu-strategy-agent.vercel.app/api/copilot", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ intakeData: brief.intakeData, prompt: aiPrompt, currentBrief: brief })

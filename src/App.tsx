@@ -44,11 +44,28 @@ export function App() {
     return () => clearInterval(interval);
   }, []);
 
-  const handleProcessIntake = (intakeData: ClientIntakeData) => {
-    const brief = generateClientStrategyBrief(intakeData);
-    setActiveBrief(brief);
+  const handleProcessIntake = async (intakeData: ClientIntakeData) => {
     setActiveTab('brief');
+    // Show a loading state if possible by clearing active brief temporarily or letting the user know
     setNewFormNotification(null);
+    try {
+      const res = await fetch("https://laniedu-strategy-agent.vercel.app/api/copilot", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ intakeData, prompt: "Generate the initial strategy brief dynamically based on this profile." })
+      });
+      const data = await res.json();
+      if (data.success && data.brief) {
+        setActiveBrief(data.brief);
+      } else {
+        alert("AI Error generating initial brief: " + data.error);
+        // Fallback to static engine if AI fails
+        setActiveBrief(generateClientStrategyBrief(intakeData));
+      }
+    } catch(err) {
+      console.error(err);
+      setActiveBrief(generateClientStrategyBrief(intakeData));
+    }
   };
 
   const handleViewLiveSubmission = (sub: any) => {
