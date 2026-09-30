@@ -31,7 +31,8 @@ Qualification: ${intakeData.highestQualification}
 
 ${prompt ? `THE ADVISOR HAS PROVIDED THIS FEEDBACK/REQUEST: "${prompt}"\nYou MUST follow this request when picking the universities and formulating the strategy.` : ''}
 
-Generate 2 reach schools, 3 target schools, 1 safety school, and 3 contingency backup schools. Use real universities from anywhere in the world that fit the profile (especially honoring the advisor's request if provided). Provide realistic tuition fees in EUR.
+Generate 2 reach schools, 3 target schools, 1 safety school, and 3 contingency backup schools. Use real universities from anywhere in the world that fit the profile (especially honoring the advisor's request if provided). 
+CRITICAL INSTRUCTION: You MUST ensure that the universities you select actually offer strong programmes in the applicant's Target Programme (${intakeData.targetProgramme}). Do not recommend a school if they do not have a course related to this field. Provide realistic tuition fees in EUR.
 
 Return only raw JSON matching this schema:
 {
