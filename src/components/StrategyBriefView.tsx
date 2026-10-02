@@ -21,6 +21,7 @@ import {
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { generatePdfDocument } from '../utils/exportPdf';
+import { saveBriefToFirestore } from '../utils/firestore';
 
 interface StrategyBriefViewProps {
   brief: ClientStrategyBrief;
@@ -80,6 +81,8 @@ export const StrategyBriefView: React.FC<StrategyBriefViewProps> = ({ brief, onU
       if (data.success && data.brief) {
         onUpdateBrief(data.brief);
         setAiPrompt("");
+        handleClearCv();
+        saveBriefToFirestore(data.brief);
       } else {
         alert("AI Error: " + data.error);
       }

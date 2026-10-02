@@ -7,11 +7,13 @@ import { StrategyBriefView } from './components/StrategyBriefView';
 import { IntakeForm } from './components/IntakeForm';
 import { GoogleSheetsModal } from './components/GoogleSheetsModal';
 import { VerifiedDatabaseView } from './components/VerifiedDatabaseView';
+import { DashboardView } from './components/DashboardView';
 import { SampleProfilesModal } from './components/SampleProfilesModal';
 import { Sparkles, Bell } from 'lucide-react';
+import { saveBriefToFirestore } from './utils/firestore';
 
 export function App() {
-  const [activeTab, setActiveTab] = useState<'brief' | 'form' | 'sheets' | 'database'>('brief');
+  const [activeTab, setActiveTab] = useState<'brief' | 'form' | 'sheets' | 'database' | 'dashboard'>('brief');
   
   // Default to sample profile #2 (HND France exception) so advisors see a live brief immediately
   const initialBrief = generateClientStrategyBrief(SAMPLE_PROFILES[1].data);
@@ -57,14 +59,19 @@ export function App() {
       const data = await res.json();
       if (data.success && data.brief) {
         setActiveBrief(data.brief);
+        saveBriefToFirestore(data.brief);
       } else {
         alert("AI Error generating initial brief: " + data.error);
         // Fallback to static engine if AI fails
-        setActiveBrief(generateClientStrategyBrief(intakeData));
+        const fallbackBrief = generateClientStrategyBrief(intakeData);
+        setActiveBrief(fallbackBrief);
+        saveBriefToFirestore(fallbackBrief);
       }
     } catch(err) {
       console.error(err);
-      setActiveBrief(generateClientStrategyBrief(intakeData));
+      const fallbackBrief = generateClientStrategyBrief(intakeData);
+      setActiveBrief(fallbackBrief);
+      saveBriefToFirestore(fallbackBrief);
     }
   };
 
@@ -168,6 +175,15 @@ export function App() {
 
           {activeTab === 'database' && (
             <VerifiedDatabaseView />
+          )}
+
+          {activeTab === 'dashboard' && (
+            <DashboardView 
+              onSelectBrief={(brief) => {
+                setActiveBrief(brief);
+                setActiveTab('brief');
+              }} 
+            />
           )}
         </main>
       </div>

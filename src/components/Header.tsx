@@ -9,8 +9,8 @@ import {
 } from 'lucide-react';
 
 interface HeaderProps {
-  activeTab: 'brief' | 'form' | 'sheets' | 'database';
-  setActiveTab: (tab: 'brief' | 'form' | 'sheets' | 'database') => void;
+  activeTab: 'brief' | 'form' | 'sheets' | 'database' | 'dashboard';
+  setActiveTab: (tab: 'brief' | 'form' | 'sheets' | 'database' | 'dashboard') => void;
   onOpenSampleProfiles: () => void;
   hasActiveBrief: boolean;
 }
@@ -93,6 +93,18 @@ export const Header: React.FC<HeaderProps> = ({
           >
             <Layers className="h-3.5 w-3.5 text-sky-400" />
             Verified Universities
+          </button>
+
+          <button
+            onClick={() => setActiveTab('dashboard')}
+            className={`flex items-center gap-2 rounded-lg px-3.5 py-1.5 text-xs font-medium transition-all ${
+              activeTab === 'dashboard'
+                ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-md'
+                : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
+            }`}
+          >
+            <Layers className="h-3.5 w-3.5 text-fuchsia-400" />
+            History Dashboard
           </button>
         </nav>
 
