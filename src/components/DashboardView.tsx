@@ -3,7 +3,7 @@ import { collection, query, orderBy, onSnapshot, limit } from 'firebase/firestor
 import { db } from '../lib/firebase';
 import type { ClientStrategyBrief } from '../types';
 import { Users, Search, Clock, BadgeCheck, FileText, ExternalLink } from 'lucide-react';
-import { formatCurrency, formatEuroAndNaira } from '../utils/fx';
+import { formatEuroAndNaira } from '../utils/fx';
 
 interface DashboardViewProps {
   onSelectBrief: (brief: ClientStrategyBrief) => void;
@@ -85,11 +85,11 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onSelectBrief }) =
             <div key={brief.id} className="glass-panel rounded-2xl p-5 border border-slate-800 hover:border-indigo-500/50 transition-all flex flex-col h-full group">
               <div className="flex justify-between items-start mb-3">
                 <h3 className="font-bold text-white text-lg truncate pr-2">{brief.intakeData.applicantName}</h3>
-                <span className={\`text-xs font-bold px-2 py-1 rounded-md \${
+                <span className={`text-xs font-bold px-2 py-1 rounded-md ${
                   brief.viability.viabilityScore >= 80 ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' :
                   brief.viability.viabilityScore >= 50 ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30' :
                   'bg-rose-500/20 text-rose-400 border border-rose-500/30'
-                }\`}>
+                }`}>
                   {brief.viability.viabilityScore}% Viable
                 </span>
               </div>
