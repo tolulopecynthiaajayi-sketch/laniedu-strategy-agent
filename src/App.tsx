@@ -77,35 +77,17 @@ export function App() {
 
   const handleViewLiveSubmission = (sub: any) => {
     const intake: ClientIntakeData = {
+      ...sub,
       id: sub.id || `live-${Date.now()}`,
       applicantName: sub.applicantName || 'Live Google Form Applicant',
       phone: sub.phone || '',
-      hasPersonalBudget: true,
-      isFullyFundedScholarshipRequested: false,
-      assistanceType: 'full_advisory',
-      highestQualification: sub.qualification || 'bachelor_21',
+      highestQualification: sub.highestQualification || sub.qualification || 'bachelor_21',
       targetProgramme: sub.targetProgramme || 'Master Degree',
-      degreeLevelSought: 'master',
+      previousBackground: sub.previousBackground || 'Not Specified',
+      professionalBackground: sub.professionalBackground || 'Not Specified',
       tuitionBudgetAmount: sub.tuitionBudgetAmount || 3500,
-      tuitionBudgetCurrency: 'EUR',
       budgetTierLabel: sub.budgetTierLabel || 'Under €4,000 / ~₦6 Million per year',
       preferredDestinations: sub.preferredDestinations || ['France', 'China'],
-      intakeTimeline: 'Spring 2027',
-      visaRefusalHistory: sub.visaRefusalHistory || 'No, zero refusals',
-      advisoryPackageSelected: sub.advisoryPackageSelected || 'Full Advisory',
-      readinessTimeline: 'Immediate',
-      scholarshipRetainerStatus: 'willing_100',
-      wantsRelocationGuidebook: false,
-      documents: {
-        passport6Months: true,
-        officialTranscripts: true,
-        degreeCertificate: true,
-        updatedCv: true,
-        referenceLetters2: true,
-        motivationLetterSop: true,
-        englishProficiency: true,
-        proofOfFunds: true
-      },
       createdAt: sub.generatedAt || new Date().toISOString()
     };
 

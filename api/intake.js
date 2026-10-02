@@ -43,21 +43,7 @@ export default function handler(req, res) {
 
       const generatedBrief = {
         id: `brief-form-${Date.now()}`,
-        applicantName,
-        phone: data.phone || '',
-        qualification,
-        targetProgramme: data.targetProgramme || 'Master Degree',
-        tuitionBudgetAmount: budgetAmount,
-        budgetTierLabel,
-        preferredDestinations: destinations,
-        visaRefusalHistory: data.visaRefusalHistory || 'No, zero refusals',
-        advisoryPackageSelected: data.advisoryPackageSelected || 'Full Advisory',
-        primaryRecommendedSchools: [
-          { schoolName: 'Université Paris-Saclay', country: 'France', tier: 'Reach', tuition: '€3,770/yr', url: 'https://www.universite-paris-saclay.fr/en' },
-          { schoolName: 'Vistula University Warsaw', country: 'Poland', tier: 'Target', tuition: '€3,800/yr', url: 'https://www.vistula.edu.pl/en' },
-          { schoolName: 'Jiangsu University', country: 'China', tier: 'Target', tuition: '20,000 RMB (~€2,550/yr)', url: 'https://oia.ujs.edu.cn/en' },
-          { schoolName: 'Asia Pacific University (APU)', country: 'Malaysia', tier: 'Safety', tuition: 'RM 28,500 (~€3,800/yr)', url: 'https://www.apu.edu.my' }
-        ],
+        ...data,
         generatedAt: new Date().toISOString()
       };
 
